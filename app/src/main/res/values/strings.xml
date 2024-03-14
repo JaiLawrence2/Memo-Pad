@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MemoPadLab4A</string>
+    <string name="AddButton">Add Memo</string>
+    <string name="DeleteButton">Delete Memo</string>
+    <string name="new_memo">New Memo:</string>
+    <string name="edit_hint">Enter New Memo</string>
+</resources>
