@@ -5,11 +5,17 @@ import androidx.annotation.NonNull;
 public class MemoPadModel extends AbstractModel {
     private int id;
     private String memo;
+   // DatabaseHandler db;
 
-    public MemoPadModel(int memoId, String memo) {
-        this.memo = memo;
+    public MemoPadModel() {
     }
 
+    public static void addMemo(String content) {
+
+    }
+    public void deleteMemo(int position) {
+
+    }
     public int getId() {
         return id;
     }
@@ -33,6 +39,7 @@ public class MemoPadModel extends AbstractModel {
         s.append("#").append(id).append(" Memo: ").append(memo).append("\n");
         return s.toString();
     }
+
 
 }
 

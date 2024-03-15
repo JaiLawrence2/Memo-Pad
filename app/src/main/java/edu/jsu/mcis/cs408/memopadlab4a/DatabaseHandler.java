@@ -41,7 +41,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void addMemo(MemoPadModel m) {
+    public void addMemo(Memo m) {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_MESSAGE, m.getMemo());
@@ -49,13 +49,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_MEMOS, null, values);
         db.close();
-
-    }
-
-    public String addDBMemos(MemoPadModel m) {
-        addMemo(new MemoPadModel(memoId, m.getMemo()));
-        Log.i(null, "database is: " + COLUMN_MESSAGE);
-        return TABLE_MEMOS;
 
     }
 
@@ -70,15 +63,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return"Memos Deleted";
 }
 
-    public MemoPadModel getMemo(int memoId) {
+    public Memo getMemo(int memoId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY_GET_MEMO, new String[]{String.valueOf(memoId)});
-        MemoPadModel memo = null;
+        Memo memo = null;
 
         if (cursor.moveToFirst()) {
-            memoId = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
-            String message = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE));
-            memo = new MemoPadModel(memoId, message);
+            memoId = cursor.getInt(0);
+            String message = cursor.getString(1);
+            memo = new Memo(memoId, message);
         }
 
         cursor.close();
@@ -87,9 +80,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public String getAllMemos() {
+    public ArrayList<Memo> getAllMemos() {
 
-        List<MemoPadModel> memoList = new ArrayList<>();
+        ArrayList<Memo> memoList = new ArrayList<>();
         StringBuilder s = new StringBuilder();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -98,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
 
             do {
-                MemoPadModel memo = new MemoPadModel(cursor.getInt(0), cursor.getString(1));
+                Memo memo = new Memo(cursor.getInt(0), cursor.getString(1));
                 int id = cursor.getInt(0);
                 s.append(getMemo(id)).append("\n");
                 memoList.add(memo);
@@ -108,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         db.close();
-        return s.toString();
+        return memoList;
 
     }
 

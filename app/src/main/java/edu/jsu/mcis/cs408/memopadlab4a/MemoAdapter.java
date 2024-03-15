@@ -16,34 +16,39 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+import edu.jsu.mcis.cs408.memopadlab4a.databinding.MemoItemBinding;
+
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder> {
 
-    private List<MemoPadModel> memoList;
-    private OnItemClickListener itemClickListener;
+    private final List<MemoPadModel> memoList;
+    private final MainActivity activity;
+    //private OnItemClickListener itemClickListener;
 
-    public interface OnItemClickListener {
+    /*public interface OnItemClickListener {
         void onItemClick(int position);
-    }
+    }*/
 
-    public MemoAdapter(List<MemoPadModel> memoList) {
+    public MemoAdapter(MainActivity activity,List<MemoPadModel> memoList) {
+        super();
+        this.activity = activity;
         this.memoList = memoList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    /*public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
-    }
+    }*/
 
     @NonNull
     @Override
     public MemoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main, parent, false);
-        return new MemoViewHolder(view);
+        MemoItemBinding binding = MemoItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new MemoViewHolder(binding.getRoot());
     }
 
     @Override
     public void onBindViewHolder(@NonNull MemoViewHolder holder, int position) {
-        MemoPadModel memoItem = memoList.get(position);
-        holder.textViewContent.setText(MemoPadModel.getContent());
+        holder.setMemo(memoList.get(position));
+        holder.bindData();
     }
 
     @Override
@@ -51,28 +56,22 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         return memoList.size();
     }
 
-    public void updateList(List<MemoPadModel> newList) {
-        memoList = newList;
-        notifyDataSetChanged();
-    }
-
-    public class MemoViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewContent;
+    public static class MemoViewHolder extends RecyclerView.ViewHolder {
+        private MemoPadModel memo;
 
         public MemoViewHolder(View itemView) {
-            super(itemView);
-            textViewContent = itemView.findViewById(R.id.memoText);
+            super(itemView);}
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && itemClickListener != null) {
-                        itemClickListener.onItemClick(position);
-                    }
-                }
-            });
+        public void bindData() {
+
+            TextView MemoLabel = itemView.findViewById(R.id.memoText);
+
+            MemoLabel.setText(memo.getMemo());
+
         }
+
+        public void setMemo(MemoPadModel memo) {this.memo = memo;}
     }
 }
+
 

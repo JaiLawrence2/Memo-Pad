@@ -1,33 +1,21 @@
 package edu.jsu.mcis.cs408.memopadlab4a;
 
+import java.util.List;
+
 public class MemoPadController extends AbstractController {
-    public class MemoController {
-
         private MainActivity activity;
-        private MemoPadModel model;
+        private final MemoPadModel model;
 
-        public MemoController(MainActivity activity, MemoPadModel model) {
+        public MemoPadController(MemoPadModel model) {
+            super();
             this.activity = activity;
             this.model = model;
-        }
-
-        public void addMemo(String content) {
-            DatabaseHandler.addMemo(content);
-            loadMemos();
-        }
-
-        public void deleteMemo(int position) {
-            model.deleteMemo(position);
-            loadMemos();
+            addModel(model);
         }
 
         public void loadMemos() {
             List<MemoPadModel> memoList = model.getAllMemos();
-            view.displayMemos(memoList);
+            activity.displayMemos(memoList);
         }
-    }
-
-    private void addModel(MemoPadModel model) {
-        model.getMemo();
-    }
 }
+

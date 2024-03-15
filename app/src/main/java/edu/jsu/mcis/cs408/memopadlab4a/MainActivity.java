@@ -1,12 +1,15 @@
 package edu.jsu.mcis.cs408.memopadlab4a;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 
 import edu.jsu.mcis.cs408.memopadlab4a.databinding.ActivityMainBinding;
 
@@ -15,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements AbstractView, Vie
     private ActivityMainBinding binding;
     private DatabaseHandler db;
     MemoPadController controller;
+    MemoPadModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +26,8 @@ public class MainActivity extends AppCompatActivity implements AbstractView, Vie
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
-        controller = new MemoPadController();
-        //MemoPadModel model = new MemoPadModel();
+        model = new MemoPadModel();
+        controller = new MemoPadController(model);
 
         controller.addView(this);
 
@@ -35,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements AbstractView, Vie
     }
     @Override
     public void onClick(View view) {
-        String newMemo = binding.memoText.getText().toString();
         int id = View.generateViewId();
 
         String tag = view.getTag().toString();
@@ -43,13 +45,10 @@ public class MainActivity extends AppCompatActivity implements AbstractView, Vie
         switch (tag) {
 
             case "AddButton": {
-                db.addMemo(new MemoPadModel(memoId, binding.memoText.getText().toString()));
-                String result = db.getAllMemos();
-
-                controller.addModel(newMemo);
+                String newMemo = binding.memoText.getText().toString();
+                db.addMemo(new Memo(newMemo));
                 //binding.output.sethasFixedSize();
-
-                binding.output.setAdapter(result);
+                updateRecyclerView();
                 Toast.makeText(this,"Memo added Successfully",Toast.LENGTH_SHORT).show();
                 break;
             }
@@ -61,6 +60,15 @@ public class MainActivity extends AppCompatActivity implements AbstractView, Vie
             default:
                 throw new IllegalStateException("Unexpected value: " + tag);
         }
+
+    }
+    private void updateRecyclerView() {
+
+        ArrayList<Memo> adapter = new RecyclerView();
+        adapter = db.getAllMemos();
+        binding.output.setHasFixedSize(true);
+        binding.output.setLayoutManager(new LinearLayoutManager(this));
+        binding.output.setAdapter(adapter.get());
 
     }
 
