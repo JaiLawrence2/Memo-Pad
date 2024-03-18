@@ -9,9 +9,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+    private static final String TAG = "Database";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "mydatabase.db";
     private static final String TABLE_MEMOS = "Memos";
@@ -21,6 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String QUERY_DELETE_MEMOS_TABLE = "DROP TABLE IF EXISTS " + TABLE_MEMOS;
     public static final String QUERY_GET_ALL_MEMOS = "SELECT * FROM " + TABLE_MEMOS;
     public static final String QUERY_GET_MEMO = "SELECT * FROM " + TABLE_MEMOS + " WHERE " + COLUMN_ID + " = ?";
+    public static final String QUERY_DELETE_MEMO = COLUMN_ID + " = ?";
 
     public DatabaseHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -49,18 +50,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_MEMOS, null, values);
         db.close();
+        Log.i(TAG, "Database memo: "+ getAllMemos());
+    }
+    public void deleteMemo(int id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MEMOS, QUERY_DELETE_MEMO, new String[]{String.valueOf(id)});
+        db.close();
 
     }
 
-    public String deleteAllMemos() {
+    public void deleteAllMemos() {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_MEMOS, null, null);
 
         db.close();
-
-        return"Memos Deleted";
 }
 
     public Memo getMemo(int memoId) {
@@ -69,12 +75,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Memo memo = null;
 
         if (cursor.moveToFirst()) {
-            memoId = cursor.getInt(0);
+            int new_id = cursor.getInt(0);
             String message = cursor.getString(1);
-            memo = new Memo(memoId, message);
+            memo = new Memo(new_id, message);
+            cursor.close();
         }
-
-        cursor.close();
         db.close();
         return memo;
     }
@@ -89,18 +94,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(QUERY_GET_ALL_MEMOS, null);
         if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
 
             do {
-                Memo memo = new Memo(cursor.getInt(0), cursor.getString(1));
                 int id = cursor.getInt(0);
-                s.append(getMemo(id)).append("\n");
-                memoList.add(memo);
+                memoList.add(getMemo(id));
             }
             while (cursor.moveToNext());
 
         }
-
+        cursor.close();
         db.close();
+
         return memoList;
 
     }

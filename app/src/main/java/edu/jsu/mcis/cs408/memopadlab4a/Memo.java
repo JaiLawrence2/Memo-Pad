@@ -11,6 +11,10 @@ public class Memo {
         this.message = message;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public Memo(String message){
         this.message = message;
     }

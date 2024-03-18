@@ -1,45 +1,30 @@
 package edu.jsu.mcis.cs408.memopadlab4a;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 public class MemoPadModel extends AbstractModel {
-    private int id;
-    private String memo;
-   // DatabaseHandler db;
+   private DatabaseHandler db;
 
-    public MemoPadModel() {
+    public MemoPadModel(MainActivity activity) {
+        db = new DatabaseHandler(activity, null, null, 1);
     }
 
-    public static void addMemo(String content) {
-
+    public void addMemo(String newText) {
+        Memo m = new Memo(newText);
+        db.addMemo(m);
+        firePropertyChange(MemoPadController.MEMO_LIST, null, db.getAllMemos());
     }
-    public void deleteMemo(int position) {
-
+    public void deleteMemo(int id) {
+        db.deleteMemo(id);
+        firePropertyChange(MemoPadController.MEMO_LIST, null, db.getAllMemos());
     }
-    public int getId() {
-        return id;
+    public void getAllMemos(){
+        firePropertyChange(MemoPadController.MEMO_LIST, null, db.getAllMemos());
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("#").append(id).append(" Memo: ").append(memo).append("\n");
-        return s.toString();
-    }
-
 
 }
 

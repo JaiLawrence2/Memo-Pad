@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/new_memo"
+        android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/memoText"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -53,13 +54,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/output"
-        android:layout_width="409dp"
-        android:layout_height="386dp"
+        android:layout_width="410dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="62dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42" />
+        app:layout_constraintTop_toBottomOf="@+id/memoText"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
